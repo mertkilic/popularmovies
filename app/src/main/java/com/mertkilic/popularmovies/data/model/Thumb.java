@@ -3,14 +3,16 @@ package com.mertkilic.popularmovies.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
  * Created by Mert Kilic on 11.9.2016.
  */
-@JsonObject(fieldDetectionPolicy = JsonObject.FieldDetectionPolicy.NONPRIVATE_FIELDS)
+@JsonObject
 public class Thumb implements Parcelable {
 
+    @JsonField
     String full;
 
     @Override
@@ -41,4 +43,12 @@ public class Thumb implements Parcelable {
             return new Thumb[size];
         }
     };
+
+    public String getFull() {
+        return full;
+    }
+
+    public void setFull(String full) {
+        this.full = full;
+    }
 }

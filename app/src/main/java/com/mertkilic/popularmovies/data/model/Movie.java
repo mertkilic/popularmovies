@@ -3,7 +3,10 @@ package com.mertkilic.popularmovies.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import java.util.List;
 
 /**
  * Created by Mert Kilic on 11.9.2016.
@@ -14,7 +17,12 @@ public class Movie implements Parcelable {
     int year;
     String title;
     String overview;
-    Thumb thumb;
+
+    @JsonField
+    List<Thumb> images;
+
+    public Movie() {
+    }
 
     @Override
     public int describeContents() {
@@ -25,19 +33,18 @@ public class Movie implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.year);
         dest.writeString(this.title);
-        dest.writeParcelable(this.thumb, flags);
-    }
-
-    public Movie() {
+        dest.writeString(this.overview);
+        dest.writeTypedList(this.images);
     }
 
     protected Movie(Parcel in) {
         this.year = in.readInt();
         this.title = in.readString();
-        this.thumb = in.readParcelable(Thumb.class.getClassLoader());
+        this.overview = in.readString();
+        this.images = in.createTypedArrayList(Thumb.CREATOR);
     }
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel source) {
             return new Movie(source);
