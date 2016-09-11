@@ -25,7 +25,7 @@ public class MainViewModel extends ViewModel<PopularMoviesView> {
 
     @Override
     public void initialize() {
-        getPopularMovies();
+        getPopularMovies(1);
     }
 
     @Override
@@ -38,8 +38,12 @@ public class MainViewModel extends ViewModel<PopularMoviesView> {
         super.onResume();
     }
 
-    private void getPopularMovies() {
-        trackTvService.getPopularMovies(1).enqueue(new Callback<List<Movie>>() {
+    public void onLoadMore(int page) {
+        getPopularMovies(page);
+    }
+
+    private void getPopularMovies(int page) {
+        trackTvService.getPopularMovies(page).enqueue(new Callback<List<Movie>>() {
             @Override
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
                 getView().onMoviesLoaded(response.body());

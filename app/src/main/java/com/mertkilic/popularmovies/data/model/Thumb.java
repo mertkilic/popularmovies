@@ -13,7 +13,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class Thumb implements Parcelable {
 
     @JsonField
-    String full;
+    Image poster;
 
     @Override
     public int describeContents() {
@@ -22,14 +22,14 @@ public class Thumb implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.full);
+        dest.writeParcelable(this.poster, flags);
     }
 
     public Thumb() {
     }
 
     protected Thumb(Parcel in) {
-        this.full = in.readString();
+        this.poster = in.readParcelable(Image.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Thumb> CREATOR = new Parcelable.Creator<Thumb>() {
@@ -44,11 +44,42 @@ public class Thumb implements Parcelable {
         }
     };
 
-    public String getFull() {
-        return full;
+    public String getThumbUrl() {
+        return poster.url;
     }
 
-    public void setFull(String full) {
-        this.full = full;
+    @JsonObject
+    static class Image implements Parcelable {
+        @JsonField(name = "thumb")
+        String url;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.url);
+        }
+
+        public Image() {
+        }
+
+        protected Image(Parcel in) {
+            this.url = in.readString();
+        }
+
+        public static final Creator<Image> CREATOR = new Creator<Image>() {
+            @Override
+            public Image createFromParcel(Parcel source) {
+                return new Image(source);
+            }
+
+            @Override
+            public Image[] newArray(int size) {
+                return new Image[size];
+            }
+        };
     }
 }

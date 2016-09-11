@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="movie"
+            type="com.mertkilic.popularmovies.data.model.Movie" />
+    </data>
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgMovie"
+            android:scaleType="fitXY"
+            app:imageUrl="@{movie.image}"
+            app:layout_aspectRatio="75%"
+            app:layout_marginBottomPercent="5%"
+            app:layout_widthPercent="100%" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgMovie"
+            android:text="@{movie.title}"
+            android:textStyle="bold"
+            app:layout_marginBottomPercent="5%" />
+
+        <TextView
+            android:id="@+id/tvYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTitle"
+            android:text="@{String.valueOf(movie.year)}"
+            android:textStyle="italic" />
+
+    </android.support.percent.PercentRelativeLayout>
+
+</layout>

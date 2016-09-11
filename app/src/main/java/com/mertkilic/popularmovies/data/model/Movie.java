@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import java.util.List;
-
 /**
  * Created by Mert Kilic on 11.9.2016.
  */
@@ -18,8 +16,8 @@ public class Movie implements Parcelable {
     String title;
     String overview;
 
-    @JsonField
-    List<Thumb> images;
+    @JsonField(name = "images")
+    Thumb image;
 
     public Movie() {
     }
@@ -34,14 +32,14 @@ public class Movie implements Parcelable {
         dest.writeInt(this.year);
         dest.writeString(this.title);
         dest.writeString(this.overview);
-        dest.writeTypedList(this.images);
+        dest.writeParcelable(this.image, flags);
     }
 
     protected Movie(Parcel in) {
         this.year = in.readInt();
         this.title = in.readString();
         this.overview = in.readString();
-        this.images = in.createTypedArrayList(Thumb.CREATOR);
+        this.image = in.readParcelable(Thumb.class.getClassLoader());
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -55,4 +53,20 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public Thumb getImage() {
+        return image;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
 }
