@@ -13,7 +13,7 @@ import com.mertkilic.popularmovies.data.model.Movie;
 import com.mertkilic.popularmovies.databinding.ActivityMainBinding;
 import com.mertkilic.popularmovies.listener.EndlessRecyclerViewScrollListener;
 import com.mertkilic.popularmovies.view.PopularMoviesView;
-import com.mertkilic.popularmovies.view.adapter.PopularMoviesAdapter;
+import com.mertkilic.popularmovies.view.adapter.MoviesAdapter;
 import com.mertkilic.popularmovies.view.decorator.SpaceItemDecorator;
 import com.mertkilic.popularmovies.viewmodel.MainViewModel;
 
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MainActivity extends ViewModelActivity<MainViewModel> implements PopularMoviesView {
 
-    PopularMoviesAdapter adapter;
+    MoviesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class MainActivity extends ViewModelActivity<MainViewModel> implements Po
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setHandler(viewModel);
 
-        adapter = new PopularMoviesAdapter();
+        adapter = new MoviesAdapter();
         binding.popularMovies.setAdapter(adapter);
         binding.popularMovies.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin)));
         binding.popularMovies.addOnScrollListener(new EndlessRecyclerViewScrollListener(binding.popularMovies.getLayoutManager()) {

@@ -1,11 +1,14 @@
 package com.mertkilic.popularmovies.view.adapter;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.mertkilic.popularmovies.BR;
+import com.mertkilic.popularmovies.R;
 import com.mertkilic.popularmovies.data.model.Movie;
-import com.mertkilic.popularmovies.databinding.ItemPopularMovieBinding;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +16,7 @@ import java.util.List;
 /**
  * Created by Mert Kilic on 11.9.2016.
  */
-public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdapter.ViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     List<Movie> movies = Collections.emptyList();
 
@@ -27,7 +30,14 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return ViewHolder.create(LayoutInflater.from(parent.getContext()), parent);
+        int layoutId = -1;
+
+        if (viewType == Movie.TYPE_POPULAR)
+            layoutId = R.layout.item_popular_movie;
+        else if (viewType == Movie.TYPE_SEARCH)
+            layoutId = R.layout.item_search_result;
+
+        return ViewHolder.create(parent, layoutId);
     }
 
     @Override
@@ -40,22 +50,28 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
         return movies.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return movies.get(position).getType();
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ItemPopularMovieBinding binding;
+        private ViewDataBinding binding;
 
-        public ViewHolder(ItemPopularMovieBinding binding) {
+        public ViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        static ViewHolder create(LayoutInflater inflater, ViewGroup parent) {
-            ItemPopularMovieBinding binding = ItemPopularMovieBinding.inflate(inflater, parent, false);
+        static ViewHolder create(ViewGroup parent, int id) {
+            ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), id, parent, false);
             return new ViewHolder(binding);
         }
 
         public void bindTo(Movie movie) {
-            binding.setMovie(movie);
+            binding.setVariable(BR.movie, movie);
+            binding.executePendingBindings();
         }
     }
 }

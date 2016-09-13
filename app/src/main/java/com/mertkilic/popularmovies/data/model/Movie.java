@@ -78,4 +78,8 @@ public class Movie implements Parcelable {
         this.type = type;
         return this;
     }
+
+    public int getType() {
+        return type;
+    }
 }
