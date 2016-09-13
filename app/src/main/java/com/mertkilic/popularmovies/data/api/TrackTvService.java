@@ -1,6 +1,7 @@
 package com.mertkilic.popularmovies.data.api;
 
 import com.mertkilic.popularmovies.data.model.Movie;
+import com.mertkilic.popularmovies.data.model.SearchResult;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface TrackTvService {
 
     @GET("movies/popular?extended=images")
     Call<List<Movie>> getPopularMovies(@Query("page") int page);
+
+    @GET("search/movie?extended=full,images")
+    Call<List<SearchResult>> search(@Query("page") int page, @Query("query") String keyword);
 }

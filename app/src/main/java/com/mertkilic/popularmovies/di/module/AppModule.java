@@ -1,10 +1,12 @@
 package com.mertkilic.popularmovies.di.module;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
 import com.mertkilic.popularmovies.data.api.TrackTvInterceptor;
 import com.mertkilic.popularmovies.data.api.TrackTvService;
+import com.mertkilic.popularmovies.di.scopes.PerApplication;
 import com.mertkilic.popularmovies.viewmodel.MainViewModel;
 
 import javax.inject.Singleton;
@@ -27,36 +29,36 @@ public class AppModule {
     }
 
     @Provides
-    @Singleton
+    @PerApplication
     public Application provideApplication() {
         return application;
     }
 
     @Provides
-    @Singleton
+    @PerApplication
+    Resources provideResources() {
+        return application.getResources();
+    }
+
+    @Provides
+    @PerApplication
     Interceptor provideInterceptor() {
         return new TrackTvInterceptor();
     }
 
     @Provides
-    @Singleton
+    @PerApplication
     OkHttpClient provideOkHttpClient(Interceptor interceptor) {
         return new OkHttpClient.Builder().addInterceptor(interceptor).build();
     }
 
     @Provides
-    @Singleton
+    @PerApplication
     TrackTvService provideTrackTvService(OkHttpClient httpClient) {
         return new Retrofit.Builder()
                 .client(httpClient)
                 .baseUrl(TrackTvService.END_POINT)
                 .addConverterFactory(LoganSquareConverterFactory.create())
                 .build().create(TrackTvService.class);
-    }
-
-    @Provides
-    @Singleton
-    MainViewModel provideMainViewModel(TrackTvService trackTvService) {
-        return new MainViewModel(trackTvService);
     }
 }

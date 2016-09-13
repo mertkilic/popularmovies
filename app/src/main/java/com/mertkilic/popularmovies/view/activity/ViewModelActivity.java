@@ -5,14 +5,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mertkilic.popularmovies.PopularMoviesApp;
+import com.mertkilic.popularmovies.di.component.ActivityComponent;
+import com.mertkilic.popularmovies.di.component.DaggerActivityComponent;
+import com.mertkilic.popularmovies.di.module.ActivityModule;
 import com.mertkilic.popularmovies.viewmodel.ViewModel;
+
+import javax.inject.Inject;
 
 /**
  * Created by Mert Kilic on 11.9.2016.
  */
-public abstract class ViewModelActivity extends AppCompatActivity {
+public abstract class ViewModelActivity<V extends ViewModel> extends AppCompatActivity {
 
-    protected ViewModel viewModel;
+    @Inject protected V viewModel;
+    protected ActivityComponent activityComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +29,17 @@ public abstract class ViewModelActivity extends AppCompatActivity {
     }
 
     abstract protected void initViewModel();
+
+    protected ActivityComponent activityComponent() {
+        if(activityComponent == null) {
+            activityComponent = DaggerActivityComponent.builder()
+                    .appComponent(PopularMoviesApp.getAppComponent())
+                    .activityModule(new ActivityModule(this))
+                    .build();
+        }
+
+        return activityComponent;
+    }
 
     @Override
     protected void onResume() {

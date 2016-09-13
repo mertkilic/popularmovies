@@ -15,10 +15,10 @@
 
         <ImageView
             android:id="@+id/imgMovie"
+            android:layout_marginBottom="5dp"
             android:scaleType="fitXY"
             app:imageUrl="@{movie.image}"
             app:layout_aspectRatio="75%"
-            app:layout_marginBottomPercent="5%"
             app:layout_widthPercent="100%" />
 
         <TextView
@@ -26,9 +26,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgMovie"
+            android:layout_marginBottom="2dp"
             android:text="@{movie.title}"
-            android:textStyle="bold"
-            app:layout_marginBottomPercent="5%" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvYear"

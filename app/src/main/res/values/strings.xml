@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+    <string name="hint_search">Search</string>
+    <string name="dummy_overview">Semper enim ita adsumit aliquid, ut ea, quae prima dederit, non deserat. Iis igitur est difficilius satis facere, qui se Latina scripta dicunt contemnere. Cur tantas regiones barbarorum pedibus obiit, tot maria transmisit? Unum nescio, quo modo possit, si luxuriosus sit, finitas cupiditates habere. Quid de Platone aut de Democrito loquar? Dolere malum est: in crucem qui agitur, beatus esse non potest. De hominibus dici non necesse est. Traditur, inquit, ab Epicuro ratio neglegendi doloris. Murenam te accusante defenderem.</string>
 </resources>

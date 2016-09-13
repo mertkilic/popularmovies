@@ -12,7 +12,11 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject(fieldDetectionPolicy = JsonObject.FieldDetectionPolicy.NONPRIVATE_FIELDS)
 public class Movie implements Parcelable {
 
+    public static final int TYPE_POPULAR = 0;
+    public static final int TYPE_SEARCH  = 1;
+
     int year;
+    int type = TYPE_POPULAR;
     String title;
     String overview;
 
@@ -68,5 +72,10 @@ public class Movie implements Parcelable {
 
     public String getOverview() {
         return overview;
+    }
+
+    public Movie setType(int type) {
+        this.type = type;
+        return this;
     }
 }

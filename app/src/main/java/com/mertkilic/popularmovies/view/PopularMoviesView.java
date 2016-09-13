@@ -7,6 +7,6 @@ import java.util.List;
 /**
  * Created by Mert Kilic on 11.9.2016.
  */
-public interface PopularMoviesView extends View{
+public interface PopularMoviesView extends View {
     void onMoviesLoaded(List<Movie> popularMovies);
 }
