@@ -10,5 +10,7 @@ import java.util.List;
 public interface TraktSearchView extends View {
     void onSearchBackButtonPressed();
 
-    void onResultsRetrieved(List<Movie> searchResults);
+    void onSearchBegin();
+
+    void onSearchFinish(List<Movie> searchResults, String keyword);
 }

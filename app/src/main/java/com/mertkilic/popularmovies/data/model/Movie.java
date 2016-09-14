@@ -21,7 +21,7 @@ public class Movie implements Parcelable {
     String overview;
 
     @JsonField(name = "images")
-    Thumb image;
+    Poster image;
 
     public Movie() {
     }
@@ -43,7 +43,7 @@ public class Movie implements Parcelable {
         this.year = in.readInt();
         this.title = in.readString();
         this.overview = in.readString();
-        this.image = in.readParcelable(Thumb.class.getClassLoader());
+        this.image = in.readParcelable(Poster.class.getClassLoader());
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -58,7 +58,7 @@ public class Movie implements Parcelable {
         }
     };
 
-    public Thumb getImage() {
+    public Poster getImage() {
         return image;
     }
 

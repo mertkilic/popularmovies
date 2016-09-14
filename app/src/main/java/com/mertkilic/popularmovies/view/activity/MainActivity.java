@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -33,7 +32,7 @@ public class MainActivity extends ViewModelActivity<MainViewModel> implements Po
 
         adapter = new MoviesAdapter();
         binding.popularMovies.setAdapter(adapter);
-        binding.popularMovies.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin)));
+        binding.popularMovies.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.space_grid_item)));
         binding.popularMovies.addOnScrollListener(new EndlessRecyclerViewScrollListener(binding.popularMovies.getLayoutManager()) {
             @Override
             public void onLoadMore(int page) {
@@ -51,7 +50,6 @@ public class MainActivity extends ViewModelActivity<MainViewModel> implements Po
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("search", "clicked");
         startActivity(new Intent(this, SearchActivity.class));
         return super.onOptionsItemSelected(item);
     }

@@ -1,6 +1,7 @@
 package com.mertkilic.popularmovies;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 import com.mertkilic.popularmovies.di.component.AppComponent;
 import com.mertkilic.popularmovies.di.component.DaggerAppComponent;
@@ -13,13 +14,10 @@ public class PopularMoviesApp extends Application {
     private static PopularMoviesApp instance;
     private static AppComponent appComponent;
 
-    public static PopularMoviesApp getInstance() {
-        return instance;
-    }
-
     public static AppComponent getAppComponent() {
         return appComponent;
     }
+    public static Resources getRes() { return instance.getResources(); }
 
     @Override
     public void onCreate() {

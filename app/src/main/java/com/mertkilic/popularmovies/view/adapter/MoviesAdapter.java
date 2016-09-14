@@ -19,12 +19,23 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     List<Movie> movies = Collections.emptyList();
+    String keyword = "";
 
     public void addMovies(List<Movie> movies) {
         if (this.movies.isEmpty())
             this.movies = movies;
         else
             this.movies.addAll(movies);
+        notifyDataSetChanged();
+    }
+
+    public void addSearchResults(List<Movie> searchResults, String keyword) {
+        if (this.keyword.equals(keyword) && !keyword.isEmpty())
+            this.movies.addAll(searchResults);
+        else {
+            this.movies = searchResults;
+            this.keyword = keyword;
+        }
         notifyDataSetChanged();
     }
 
@@ -37,7 +48,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         else if (viewType == Movie.TYPE_SEARCH)
             layoutId = R.layout.item_search_result;
 
-        return ViewHolder.create(parent, layoutId);
+        return ViewHolder.create(LayoutInflater.from(parent.getContext()), parent, layoutId);
     }
 
     @Override
@@ -64,13 +75,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             this.binding = binding;
         }
 
-        static ViewHolder create(ViewGroup parent, int id) {
-            ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), id, parent, false);
+        static ViewHolder create(LayoutInflater inflater, ViewGroup parent, int layoutId) {
+            ViewDataBinding binding = DataBindingUtil.inflate(inflater, layoutId, parent, false);
             return new ViewHolder(binding);
         }
 
         public void bindTo(Movie movie) {
-            binding.setVariable(BR.movie, movie);
+            if (movie.getType() == Movie.TYPE_POPULAR)
+                binding.setVariable(BR.movie, movie);
+            else if (movie.getType() == Movie.TYPE_SEARCH)
+                binding.setVariable(BR.searchResult, movie);
             binding.executePendingBindings();
         }
     }

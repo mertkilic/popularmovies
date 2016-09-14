@@ -2,6 +2,7 @@ package com.mertkilic.popularmovies.view.decorator;
 
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -18,13 +19,19 @@ public class SpaceItemDecorator extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        int spanCount = ((GridLayoutManager) parent.getLayoutManager()).getSpanCount();
-        int position = parent.getChildAdapterPosition(view);
+        RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
+        if (layoutManager instanceof GridLayoutManager) {
+            int spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
+            int position = parent.getChildAdapterPosition(view);
 
-        if (position < spanCount)
+            if (position < spanCount)
+                outRect.top = space;
+            else
+                outRect.top = 0;
+
+        } else {
             outRect.top = space;
-        else
-            outRect.top = 0;
+        }
 
         outRect.bottom = space;
         outRect.right = space;

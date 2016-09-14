@@ -10,10 +10,24 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  * Created by Mert Kilic on 11.9.2016.
  */
 @JsonObject
-public class Thumb implements Parcelable {
+public class Poster implements Parcelable {
 
     @JsonField
     Image poster;
+
+    @JsonField
+    Image thumb;
+
+    public Poster() {
+    }
+
+    public Image getPoster() {
+        return poster;
+    }
+
+    public Image getThumb() {
+        return thumb;
+    }
 
     @Override
     public int describeContents() {
@@ -23,35 +37,36 @@ public class Thumb implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.poster, flags);
+        dest.writeParcelable(this.thumb, flags);
     }
 
-    public Thumb() {
-    }
-
-    protected Thumb(Parcel in) {
+    protected Poster(Parcel in) {
         this.poster = in.readParcelable(Image.class.getClassLoader());
+        this.thumb = in.readParcelable(Image.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Thumb> CREATOR = new Parcelable.Creator<Thumb>() {
+    public static final Creator<Poster> CREATOR = new Creator<Poster>() {
         @Override
-        public Thumb createFromParcel(Parcel source) {
-            return new Thumb(source);
+        public Poster createFromParcel(Parcel source) {
+            return new Poster(source);
         }
 
         @Override
-        public Thumb[] newArray(int size) {
-            return new Thumb[size];
+        public Poster[] newArray(int size) {
+            return new Poster[size];
         }
     };
 
-    public String getThumbUrl() {
-        return poster.url;
-    }
-
     @JsonObject
-    static class Image implements Parcelable {
+    public static class Image implements Parcelable {
         @JsonField(name = "thumb")
-        String url;
+        String posterUrl;
+
+        @JsonField(name = "full")
+        String thumbUrl;
+
+        public Image() {
+        }
 
         @Override
         public int describeContents() {
@@ -60,14 +75,13 @@ public class Thumb implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.url);
-        }
-
-        public Image() {
+            dest.writeString(this.posterUrl);
+            dest.writeString(this.thumbUrl);
         }
 
         protected Image(Parcel in) {
-            this.url = in.readString();
+            this.posterUrl = in.readString();
+            this.thumbUrl = in.readString();
         }
 
         public static final Creator<Image> CREATOR = new Creator<Image>() {
@@ -81,5 +95,13 @@ public class Thumb implements Parcelable {
                 return new Image[size];
             }
         };
+
+        public String getPosterUrl() {
+            return posterUrl;
+        }
+
+        public String getThumbUrl() {
+            return thumbUrl;
+        }
     }
 }
