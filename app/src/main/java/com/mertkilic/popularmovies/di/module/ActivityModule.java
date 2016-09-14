@@ -4,6 +4,7 @@ import com.mertkilic.popularmovies.data.api.TrackTvService;
 import com.mertkilic.popularmovies.di.scopes.PerActivity;
 import com.mertkilic.popularmovies.view.activity.ViewModelActivity;
 import com.mertkilic.popularmovies.viewmodel.MainViewModel;
+import com.mertkilic.popularmovies.viewmodel.SearchViewModel;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,10 +26,10 @@ public class ActivityModule {
     MainViewModel provideMainViewModel(TrackTvService trackTvService) {
         return new MainViewModel(trackTvService);
     }
-/*
+
     @Provides
     @PerActivity
-    SearchViewModel provideSearchViewModel() {
-        return new SearchViewModel();
-    }*/
+    SearchViewModel provideSearchViewModel(TrackTvService trackTvService) {
+        return new SearchViewModel(trackTvService);
+    }
 }
