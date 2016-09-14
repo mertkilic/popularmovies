@@ -3,7 +3,9 @@ package com.mertkilic.popularmovies.viewmodel;
 
 import android.content.Context;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +29,7 @@ import retrofit2.Response;
  * Created by Mert Kilic on 12.9.2016.
  */
 public class SearchViewModel extends ViewModel<TraktSearchView> implements MenuItemCompat.OnActionExpandListener,
-        SearchView.OnQueryTextListener, View.OnTouchListener {
+        SearchView.OnQueryTextListener, View.OnTouchListener, SwipeRefreshLayout.OnRefreshListener {
 
     TrackTvService trackTvService;
     String keyword;
@@ -59,11 +61,19 @@ public class SearchViewModel extends ViewModel<TraktSearchView> implements MenuI
     }
 
     @Override
-    public boolean onQueryTextChange(String keyword) {
-        if (keyword.length() >= 3) {
-            getView().onSearchBegin();
-            this.keyword = keyword;
-            search(1);
+    public boolean onQueryTextChange(final String keyword) {
+        if (keyword.length() < 3) {
+            getView().clearView();
+            this.keyword = "";
+        } else {
+            uiThreadHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getView().onSearchBegin();
+                    SearchViewModel.this.keyword = keyword;
+                    search(1);
+                }
+            }, 200);
         }
         return false;
     }
@@ -75,6 +85,16 @@ public class SearchViewModel extends ViewModel<TraktSearchView> implements MenuI
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         return false;
     }
+
+
+    @Override
+    public void onRefresh() {
+        if (!TextUtils.isEmpty(keyword)) {
+            getView().onSearchBegin();
+            search(1);
+        } else getView().clearView();
+    }
+
 
     public void onLoadMore(int page) {
         search(page);
@@ -93,7 +113,7 @@ public class SearchViewModel extends ViewModel<TraktSearchView> implements MenuI
 
             @Override
             public void onFailure(Call<List<SearchResult>> call, Throwable t) {
-
+                getView().onError(t);
             }
         });
     }

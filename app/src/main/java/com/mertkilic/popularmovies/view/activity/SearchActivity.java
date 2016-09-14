@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
-import android.view.View;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.mertkilic.popularmovies.R;
 import com.mertkilic.popularmovies.data.model.Movie;
@@ -17,13 +17,14 @@ import com.mertkilic.popularmovies.view.adapter.MoviesAdapter;
 import com.mertkilic.popularmovies.view.decorator.SpaceItemDecorator;
 import com.mertkilic.popularmovies.viewmodel.SearchViewModel;
 
-import java.util.Collections;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class SearchActivity extends ViewModelActivity<SearchViewModel> implements TraktSearchView {
 
     MoviesAdapter adapter;
     ActivitySearchBinding binding;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +36,14 @@ public class SearchActivity extends ViewModelActivity<SearchViewModel> implement
         adapter = new MoviesAdapter();
         binding.searchResults.setAdapter(adapter);
         binding.searchResults.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.space_linear_item)));
-        binding.searchResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(binding.searchResults.getLayoutManager()) {
+        scrollListener = new EndlessRecyclerViewScrollListener(binding.searchResults.getLayoutManager()) {
             @Override
             public void onLoadMore(int page) {
                 viewModel.onLoadMore(page);
             }
-        });
+        };
+        binding.searchResults.addOnScrollListener(scrollListener);
+        binding.swipeRefresh.setOnRefreshListener(viewModel);
         binding.searchResults.setOnTouchListener(viewModel);
     }
 
@@ -67,13 +70,52 @@ public class SearchActivity extends ViewModelActivity<SearchViewModel> implement
 
     @Override
     public void onSearchBegin() {
-        adapter.addSearchResults(Collections.EMPTY_LIST, "");
-        binding.progress.setVisibility(View.VISIBLE);
+        hideEmptyLayout();
+        toggleProgress(true);
     }
 
     @Override
     public void onSearchFinish(List<Movie> searchResults, String keyword) {
-        binding.progress.setVisibility(View.GONE);
-        adapter.addSearchResults(searchResults, keyword);
+        toggleProgress(false);
+        hideEmptyLayout();
+        if (searchResults.isEmpty()) {
+            showEmptyLayout(getString(R.string.error_no_results, keyword));
+        } else
+            adapter.addSearchResults(searchResults, keyword);
+    }
+
+    @Override
+    public void onError(Throwable t) {
+        toggleProgress(false);
+        if (t instanceof UnknownHostException)
+            showEmptyLayout(getString(R.string.error_no_connection));
+        else
+            showEmptyLayout(getString(R.string.error_common));
+    }
+
+    @Override
+    public void clearView() {
+        clearList();
+        hideEmptyLayout();
+        toggleProgress(false);
+    }
+
+    private void clearList() {
+        scrollListener.reset();
+        adapter.clearMovies();
+    }
+
+    private void showEmptyLayout(String error) {
+        clearList();
+        binding.emptyLayout.tvError.setVisibility(View.VISIBLE);
+        binding.emptyLayout.tvError.setText(error);
+    }
+
+    private void hideEmptyLayout() {
+        binding.emptyLayout.tvError.setVisibility(View.GONE);
+    }
+
+    private void toggleProgress(boolean refresh) {
+        binding.swipeRefresh.setRefreshing(refresh);
     }
 }

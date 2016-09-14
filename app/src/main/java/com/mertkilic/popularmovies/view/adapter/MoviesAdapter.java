@@ -30,12 +30,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     public void addSearchResults(List<Movie> searchResults, String keyword) {
-        if (this.keyword.equals(keyword) && !keyword.isEmpty())
-            this.movies.addAll(searchResults);
+        if (this.keyword.equals(keyword))
+            movies.addAll(searchResults);
         else {
-            this.movies = searchResults;
+            movies.clear();
+            movies = searchResults;
             this.keyword = keyword;
         }
+        notifyDataSetChanged();
+    }
+
+    public void clearMovies() {
+        movies.clear();
         notifyDataSetChanged();
     }
 

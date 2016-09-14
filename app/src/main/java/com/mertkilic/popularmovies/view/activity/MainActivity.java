@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.mertkilic.popularmovies.R;
 import com.mertkilic.popularmovies.data.model.Movie;
@@ -16,18 +17,20 @@ import com.mertkilic.popularmovies.view.adapter.MoviesAdapter;
 import com.mertkilic.popularmovies.view.decorator.SpaceItemDecorator;
 import com.mertkilic.popularmovies.viewmodel.MainViewModel;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class MainActivity extends ViewModelActivity<MainViewModel> implements PopularMoviesView {
 
     MoviesAdapter adapter;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         activityComponent().inject(this);
         super.onCreate(savedInstanceState);
 
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setHandler(viewModel);
 
         adapter = new MoviesAdapter();
@@ -39,6 +42,7 @@ public class MainActivity extends ViewModelActivity<MainViewModel> implements Po
                 viewModel.onLoadMore(page);
             }
         });
+        binding.swipeRefresh.setOnRefreshListener(viewModel);
     }
 
     @Override
@@ -61,7 +65,44 @@ public class MainActivity extends ViewModelActivity<MainViewModel> implements Po
     }
 
     @Override
+    public void onMoviesLoading() {
+        binding.swipeRefresh.setRefreshing(true);
+    }
+
+    @Override
     public void onMoviesLoaded(List<Movie> popularMovies) {
+        hideEmptyLayout();
+        toggleProgress(false);
         adapter.addMovies(popularMovies);
+    }
+
+    @Override
+    public void onError(Throwable t) {
+        toggleProgress(false);
+        if (t instanceof UnknownHostException)
+            showEmptyLayout(getString(R.string.error_no_connection));
+        else
+            showEmptyLayout(getString(R.string.error_common));
+    }
+
+    @Override
+    public void clearView() {
+        hideEmptyLayout();
+        toggleProgress(false);
+    }
+
+    private void showEmptyLayout(String error) {
+        binding.popularMovies.setVisibility(View.GONE);
+        binding.emptyLayout.tvError.setVisibility(View.VISIBLE);
+        binding.emptyLayout.tvError.setText(error);
+    }
+
+    private void hideEmptyLayout() {
+        binding.emptyLayout.tvError.setVisibility(View.GONE);
+        binding.popularMovies.setVisibility(View.VISIBLE);
+    }
+
+    private void toggleProgress(boolean refresh) {
+        binding.swipeRefresh.setRefreshing(refresh);
     }
 }

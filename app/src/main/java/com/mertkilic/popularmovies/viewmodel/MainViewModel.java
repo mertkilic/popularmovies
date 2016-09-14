@@ -1,5 +1,6 @@
 package com.mertkilic.popularmovies.viewmodel;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.mertkilic.popularmovies.data.api.TrackTvService;
@@ -19,7 +20,7 @@ import retrofit2.Response;
  * Created by Mert Kilic on 11.9.2016.
  */
 @PerActivity
-public class MainViewModel extends ViewModel<PopularMoviesView> {
+public class MainViewModel extends ViewModel<PopularMoviesView> implements SwipeRefreshLayout.OnRefreshListener {
 
     TrackTvService trackTvService;
 
@@ -56,8 +57,13 @@ public class MainViewModel extends ViewModel<PopularMoviesView> {
 
             @Override
             public void onFailure(Call<List<Movie>> call, Throwable t) {
-                Log.e("onFailure : ", t.getMessage(), t);
+                getView().onError(t);
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        getPopularMovies(1);
     }
 }

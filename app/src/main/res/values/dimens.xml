@@ -2,4 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="space_grid_item">16dp</dimen>
     <dimen name="space_linear_item">8dp</dimen>
+    <dimen name="search_placeholder_height">72dp</dimen>
+    <dimen name="search_image_height">180dp</dimen>
 </resources>
