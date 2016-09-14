@@ -92,15 +92,21 @@ public class SearchViewModel extends ViewModel<TraktSearchView> implements MenuI
         if (!TextUtils.isEmpty(keyword)) {
             getView().onSearchBegin();
             search(1);
-        } else getView().clearView();
+        } else {
+            getView().clearView();
+            this.keyword = "";
+        }
     }
 
-
     public void onLoadMore(int page) {
-        search(page);
+        search(page, true);
     }
 
     private void search(int page) {
+        search(page, false);
+    }
+
+    private void search(int page, final boolean loadMore) {
         trackTvService.search(page, keyword).enqueue(new Callback<List<SearchResult>>() {
             @Override
             public void onResponse(Call<List<SearchResult>> call, Response<List<SearchResult>> response) {
@@ -108,7 +114,7 @@ public class SearchViewModel extends ViewModel<TraktSearchView> implements MenuI
                 for (SearchResult searchResult : response.body()) {
                     movies.add(searchResult.getMovie().setType(Movie.TYPE_SEARCH));
                 }
-                getView().onSearchFinish(movies, keyword);
+                getView().onSearchFinish(movies, keyword, loadMore);
             }
 
             @Override

@@ -75,10 +75,10 @@ public class SearchActivity extends ViewModelActivity<SearchViewModel> implement
     }
 
     @Override
-    public void onSearchFinish(List<Movie> searchResults, String keyword) {
+    public void onSearchFinish(List<Movie> searchResults, String keyword, boolean loadMore) {
         toggleProgress(false);
         hideEmptyLayout();
-        if (searchResults.isEmpty()) {
+        if (searchResults.isEmpty() && !loadMore) {
             showEmptyLayout(getString(R.string.error_no_results, keyword));
         } else
             adapter.addSearchResults(searchResults, keyword);

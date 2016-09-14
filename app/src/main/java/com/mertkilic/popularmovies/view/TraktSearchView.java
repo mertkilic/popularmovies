@@ -12,5 +12,5 @@ public interface TraktSearchView extends View {
 
     void onSearchBegin();
 
-    void onSearchFinish(List<Movie> searchResults, String keyword);
+    void onSearchFinish(List<Movie> searchResults, String keyword, boolean loadMore);
 }
