@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="searchResult"
             type="com.mertkilic.popularmovies.data.model.Movie" />
@@ -14,55 +16,75 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imgSearchResult"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:adjustViewBounds="true"
-                app:imageUrl="@{searchResult.image.thumb.thumbUrl ?? searchResult.image.poster.posterUrl}"
-                app:placeholder="@{@drawable/placeholder}"
-                tools:src="@drawable/placeholder" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_grid_item">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imgSearchResult"
-                android:orientation="vertical"
-                android:padding="@dimen/space_grid_item">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:text="@{searchResult.title}"
-                    android:textStyle="bold"
-                    tools:text="Suicide Squad" />
+                <ImageView
+                    android:id="@+id/imgSearchResult"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/search_image_height"
+                    android:layout_weight="1"
+                    android:visibility="@{searchResult.image.poster.posterUrl != null ? View.VISIBLE : View.GONE}"
+                    app:imageUrl="@{searchResult.image.poster.posterUrl}"
+                    tools:src="@drawable/ic_placeholder" />
 
-                <TextView
-                    android:id="@+id/tvYear"
-                    android:layout_width="wrap_content"
+                <!--Because of Glide's placeholder method causing some issues during scroll, use this-->
+                <ImageView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text='@{searchResult.year == 0 ? "-" : String.valueOf(searchResult.year)}'
-                    android:textStyle="italic"
-                    tools:text="2016" />
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_placeholder"
+                    android:visibility="@{searchResult.image.poster.posterUrl == null ? View.VISIBLE : View.GONE}" />
 
-                <TextView
-                    android:id="@+id/tvOverview"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{searchResult.overview}"
-                    tools:text="@string/dummy_overview" />
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_grid_item">
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="@{searchResult.title}"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        tools:text="Suicide Squad" />
+
+                    <TextView
+                        android:id="@+id/tvYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text='@{searchResult.year == 0 ? "-" : String.valueOf(searchResult.year)}'
+                        android:textSize="18sp"
+                        android:textStyle="italic"
+                        tools:text="2016" />
+                </LinearLayout>
 
             </LinearLayout>
-        </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvOverview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_linear_item"
+                android:text="@{searchResult.overview}"
+                tools:text="@string/dummy_overview" />
+
+        </LinearLayout>
     </android.support.v7.widget.CardView>
-
-
 </layout>
